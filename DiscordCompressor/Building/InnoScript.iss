@@ -40,7 +40,11 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Debug\net8.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ethan\Downloads\TwitchDownloaderGUI-1.54.1-Windows-x64\ffmpeg.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -51,7 +55,7 @@ Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCo
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\command"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\command"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Flags: uninsdeletevalue
 ;End of registry data from file add_context_menu.reg
 
 [Icons]
