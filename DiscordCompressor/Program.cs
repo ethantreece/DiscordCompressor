@@ -13,19 +13,35 @@ namespace DiscordCompressor
         [STAThread]
         static void Main(string[] args)
         {
-
-            if (args.Length < 1) {
+            if (args.Length < 2) {
                 MessageBox.Show("Please provide the path to the video file.");
                 return;
             }
 
-            string inputFilePath = "";
-            if (args.Length == 1)
+            double size = 0;
+            String sizeString = args[0];
+            if ("25".Equals(sizeString))
             {
-                inputFilePath = args[0];
+                size = 24.9;
+            } else if ("50".Equals (sizeString))
+            {
+                size = 49.9;
+            } else if ("100".Equals(sizeString))
+            {
+                size = 99.9;
             } else
             {
-                inputFilePath = string.Join(" ", args);
+                MessageBox.Show("Please provide a valid desired file size (25, 50, 100).");
+                return;
+            }
+
+            string inputFilePath = "";
+            if (args.Length == 2)
+            {
+                inputFilePath = args[1];
+            } else
+            {
+                inputFilePath = string.Join(" ", args.Skip(1));
             }
             
             string outputFilePath = Path.Combine(Path.GetDirectoryName(inputFilePath),
@@ -73,7 +89,7 @@ namespace DiscordCompressor
             {
                 form.Shown += async (sender, e) =>
                 {
-                    await Task.Run(() => success = CompressVideo(inputFilePath, outputFilePath, form));
+                    await Task.Run(() => success = CompressVideo(size, inputFilePath, outputFilePath, form));
                     form.Close();
                 };
                 Application.Run(form);
@@ -83,7 +99,7 @@ namespace DiscordCompressor
 
         }
 
-        static bool CompressVideo(string inputFilePath, string outputFilePath, ProgressForm form)
+        static bool CompressVideo(double size, string inputFilePath, string outputFilePath, ProgressForm form)
         {
             double videoDuration = GetVideoDuration(inputFilePath);
             if (videoDuration <= 0)
@@ -92,7 +108,17 @@ namespace DiscordCompressor
                 return false;
             }
 
-            double targetFileSizeBytes = 24.9 * 1024 * 1024; // 25 MB in bytes
+            double targetFileSizeBytes = size * 1024 * 1024; // desired size in bytes
+
+            // Check if actual is already below target
+
+            FileInfo inputFile = new FileInfo(inputFilePath);
+            if (inputFile.Length <= targetFileSizeBytes)
+            {
+                MessageBox.Show("The file is already below the desired compression size. Compression is not needed.");
+                return false;
+            }
+
             double targetVideoBitrate = (targetFileSizeBytes * 8) / videoDuration; // in bits per second
 
             // Adjust the bitrate calculation to include audio bitrate, here assumed as 128k
