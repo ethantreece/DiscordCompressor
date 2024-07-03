@@ -12,4 +12,4 @@ Includes options for upload limits based on boosted server levels (25mb, 50mb, 1
 #### Information
 InnoScript was used to build the installer for the application. You could publish the code yourself and alter the InnoScript.iss by pointing the files to the correct directory and compile the installer.
 
-The video is compressed using FFmpeg and the Two-Pass encoding method. The temporary files seen while compressed are created in the first pass to analyze the video information and allow more accurate compression in the second pass.
+The video is compressed using FFmpeg and the Two-Pass encoding method. The temporary files seen while compressing are created in the first pass to analyze the video information and allow more accurate compression in the second pass.
