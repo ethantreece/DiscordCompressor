@@ -40,18 +40,33 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Debug\net8.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ethan\source\repos\DiscordCompressor\DiscordCompressor\bin\Release\net8.0-windows\publish\DiscordCompressor.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ethan\Downloads\TwitchDownloaderGUI-1.54.1-Windows-x64\ffmpeg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Programming Projects\DiscordVideoCompress\Icons\*"; DestDir: "{app}\Icons"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
 ;Registry data from file add_context_menu.reg
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: ""; ValueData: "Compress for Discord"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: ""; ValueData: ""; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\command"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\command"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "subcommands"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Compress for Discord"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\a25mb"; ValueType: string; ValueName: ""; ValueData: "25mb"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\a25mb"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Icons\level1.ico"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\a25mb\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" 25 ""%1"""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\b50mb"; ValueType: string; ValueName: ""; ValueData: "50mb"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\b50mb"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Icons\level2.ico"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\b50mb\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" 50 ""%1"""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\c100mb"; ValueType: string; ValueName: ""; ValueData: "100mb"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\c100mb"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Icons\level3.ico"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\DiscordCompressor\shell\c100mb\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" 100 ""%1"""; Flags: uninsdeletevalue
 ;End of registry data from file add_context_menu.reg
 
 [Icons]
