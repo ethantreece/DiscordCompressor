@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -10,9 +11,13 @@ namespace DiscordCompressor
     internal static class Program
     {
 
+        // static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+
         [STAThread]
         static void Main(string[] args)
         {
+            // LogMessage($"Arguments: {string.Join(", ", args)}");
+
             if (args.Length < 2) {
                 MessageBox.Show("Please provide the path to the video file.");
                 return;
@@ -22,13 +27,13 @@ namespace DiscordCompressor
             String sizeString = args[0];
             if ("25".Equals(sizeString))
             {
-                size = 24.9;
+                size = 24.5;
             } else if ("50".Equals (sizeString))
             {
-                size = 49.9;
+                size = 49.5;
             } else if ("100".Equals(sizeString))
             {
-                size = 99.9;
+                size = 99;
             } else
             {
                 MessageBox.Show("Please provide a valid desired file size (25, 50, 100).");
@@ -99,6 +104,11 @@ namespace DiscordCompressor
 
         }
 
+        //static void LogMessage(string message)
+        //{
+        //    File.AppendAllText(LogFilePath, $"{DateTime.Now}: {message}{Environment.NewLine}");
+        //}
+
         static bool CompressVideo(double size, string inputFilePath, string outputFilePath, ProgressForm form)
         {
             double videoDuration = GetVideoDuration(inputFilePath);
@@ -121,24 +131,22 @@ namespace DiscordCompressor
 
             double targetVideoBitrate = (targetFileSizeBytes * 8) / videoDuration; // in bits per second
 
-            // Adjust the bitrate calculation to include audio bitrate, here assumed as 128k
-            double audioBitrate = GetAudioBitrate(inputFilePath); // 128 kbps in bits per second
-            double finalVideoBitrate = targetVideoBitrate - audioBitrate;
+            double finalVideoBitrate = targetVideoBitrate - (192 * 1024); // SET TO 192kbps audio bitrate
 
+
+            string reportFilePath = $"ffmpeg-{DateTime.Now:yyyyMMdd-HHmmss}.log"; // THIS IS BECAUSE PROCESS DOES NOT WORK WITHOUT '-report' IN FIRST PASS FOR ALL .MP4 FILES
             ProcessStartInfo startInfo1 = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-y -i \"{inputFilePath}\" -b:v {finalVideoBitrate} -b:a 128k -pass 1 -an -f mp4 NUL",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
+                Arguments = $"-y -i \"{inputFilePath}\" -c:v libx264 -b:v {finalVideoBitrate} -pass 1 -vsync cfr -report -f null NUL",
                 UseShellExecute = false,
                 CreateNoWindow = true
-            };
+            }; //  -loglevel debug -report
 
             ProcessStartInfo startInfo2 = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-i \"{inputFilePath}\" -b:v {finalVideoBitrate} -b:a 128k -pass 2 -progress pipe:2 \"{outputFilePath}\"",
+                Arguments = $"-i \"{inputFilePath}\" -c:v libx264 -b:v {finalVideoBitrate} -pass 2 -c:a aac -b:a 192k -progress pipe:2 \"{outputFilePath}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -147,12 +155,12 @@ namespace DiscordCompressor
 
             using (Process process1 = Process.Start(startInfo1))
             {
-                process1.BeginErrorReadLine();
                 process1.WaitForExit();
 
                 if (process1.ExitCode != 0)
                 {
-                    MessageBox.Show("An error occurred during the first pass of video compression.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"An error occurred during the first pass of video compression. Bitrate: {finalVideoBitrate}. Error code:{process1.ExitCode}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // LogMessage($"Error: first pass ffmpeg exited with code {process1.ExitCode}");
                     return false;
                 }
             }
@@ -165,18 +173,19 @@ namespace DiscordCompressor
 
                 if (process2.ExitCode != 0)
                 {
-                    MessageBox.Show("An error occurred during the second pass of video compression.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"An error occurred during the second pass of video compression. Bitrate: {finalVideoBitrate}. Error code:{process2.ExitCode}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // LogMessage($"Error: second pass ffmpeg exited with code {process2.ExitCode}");
                     return false;
                 }
             }
 
             // Delete temporary files
-            DeleteTemporaryFiles();
+            DeleteTemporaryFiles(reportFilePath);
 
             return true;
         }
 
-        static void DeleteTemporaryFiles()
+        static void DeleteTemporaryFiles(String reportFilePath)
         {
             try
             {
@@ -191,6 +200,10 @@ namespace DiscordCompressor
                 if (File.Exists(tempFile2))
                 {
                     File.Delete(tempFile2);
+                }
+                if (File.Exists(reportFilePath))
+                {
+                    File.Delete(reportFilePath);
                 }
             }
             catch (Exception ex)
@@ -237,42 +250,6 @@ namespace DiscordCompressor
 
             return duration;
         }
-
-        static int GetAudioBitrate(string inputFilePath)
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = "ffmpeg",
-                Arguments = $"-i \"{inputFilePath}\"",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            int audioBitrate = 128000; // Default to 128kbps if not found
-            using (Process process = Process.Start(startInfo))
-            {
-                process.ErrorDataReceived += (sender, e) =>
-                {
-                    if (!string.IsNullOrEmpty(e.Data))
-                    {
-                        string pattern = @"Stream.*Audio:.* (\d+) kb/s";
-                        Match match = Regex.Match(e.Data, pattern);
-                        if (match.Success)
-                        {
-                            audioBitrate = int.Parse(match.Groups[1].Value) * 1000; // Convert kbps to bps
-                        }
-                    }
-                };
-
-                process.BeginErrorReadLine();
-                process.WaitForExit();
-            }
-
-            return audioBitrate;
-        }
-
 
         static void ParseProgress(string data, double totalDuration, ProgressForm form)
         {
